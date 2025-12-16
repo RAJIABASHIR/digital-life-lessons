@@ -1,16 +1,53 @@
-# React + Vite
+Digital Life Lessons — Personal Reflection Web App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Description:
 
-Currently, two official plugins are available:
+Digital Life Lessons is a single-page web app where users can capture, organize, and revisit important lessons from their lives. Authenticated users can create lessons with a title, story, category, emotional tone, image, and privacy level (public/private). Public lessons can be browsed and saved as favorites, making it a clean and focused portfolio project for modern React development.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Technologies:
 
-## React Compiler
+- React, React Router, Vite
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- JavaScript, HTML, Tailwind CSS
 
-## Expanding the ESLint configuration
+- Axios, React Hot Toast, SweetAlert2, Lottie
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- Firebase Auth (email/password + Google)
+
+- Deployed on Netlify/Vercel
+
+Key Features:
+
+- Email/password and Google login
+
+- Create, edit, delete life lessons
+
+- Public vs. private visibility, free vs. premium access
+
+- Browse public lessons with search, filters, and sorting
+
+- Favorites system (“My Favorites” page)
+
+- Personal dashboard (totals, simple trends)
+
+- Profile page with editable name and avatar
+
+Getting Started:
+
+git clone https://github.com/<https://github.com/RAJIABASHIR/digital-life-lessons>/digital-life-lessons.git
+
+cd digital-life-lessons
+
+npm install
+
+npm run dev
+
+LIVE LINK- https://digital-life-lessons-client.netlify.app
+
+Github Link: https://github.com/RAJIABASHIR/digital-life-lessons
+
+Server Side Link: https://github.com/RAJIABASHIR/digital-life-lessons-server
+
+Vercel Link: https://digital-life-lessons-server-beta.vercel.app/api
+
+https://digital-life-lessons-server-beta.vercel.app/api/lessons/public
