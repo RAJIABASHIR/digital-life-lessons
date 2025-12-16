@@ -34,7 +34,7 @@ Key Features:
 
 Getting Started:
 
-git clone https://github.com/<https://github.com/RAJIABASHIR/digital-life-lessons>/digital-life-lessons.git
+git clone https://github.com/RAJIABASHIR/digital-life-lessons
 
 cd digital-life-lessons
 
