@@ -4,8 +4,9 @@ import app from "../firebase/firebase.config";
 
 const axiosInstance = axios.create({
   baseURL:
-    import.meta.env.VITE_API_BASE_URL || "https://digital-life-lessons-server-beta.vercel.app/api",
-    //"http://localhost:5001/api"  
+    import.meta.env.VITE_API_BASE_URL
+  //"http://localhost:5001/api" 
+  //"https://digital-life-lessons-server-beta.vercel.app/api" 
 });
 
 axiosInstance.interceptors.request.use(async (config) => {

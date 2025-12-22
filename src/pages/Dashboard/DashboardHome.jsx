@@ -1,6 +1,8 @@
-import { useEffect } from "react";
+//import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import useAuth from "../../context/useAuth";
+import { useQuery } from "@tanstack/react-query";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 import {
   ResponsiveContainer,
   AreaChart,
@@ -9,29 +11,42 @@ import {
   YAxis,
   Tooltip,
 } from "recharts";
+import LoadingSpinner from "../../components/LoadingSpinner";
 
 export default function DashboardOverview() {
-  const { appUser, refetchAppUser } = useAuth();
+  const { appUser } = useAuth();
+  const axiosSecure = useAxiosSecure();
 
-  useEffect(() => {
-    refetchAppUser?.();
-  }, [refetchAppUser]);
+  const { data: stats, isLoading } = useQuery({
+    queryKey: ['dashboard-stats', appUser?.email],
+    enabled: !!appUser?.email,
+    queryFn: async () => {
+      const res = await axiosSecure.get('/users/stats/dashboard');
+      return res.data;
+    }
+  });
 
-  const totalLessons = appUser?.totalLessons ?? 6;
-  const totalFavorites = appUser?.totalFavorites ?? 6;
+  if (isLoading) return <LoadingSpinner />;
+
+  const totalLessons = stats?.totalLessons ?? 6;
+  const totalFavorites = stats?.totalFavorites ?? 6;
   const plan = appUser?.isPremium ? "Premium" : "Free";
 
-  const trend = [
-    { name: "#1", value: 10 },
-    { name: "#2", value: 6 },
-    { name: "#3", value: 7 },
-    { name: "#4", value: 9 },
-  ];
+ 
+  const recentLessons = stats?.recentLessons || [];
+  const trend = recentLessons.length > 0
+    ? recentLessons.map((l, i) => ({
+      name: new Date(l.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
+      value: l.wordCount || (i + 5) * 10 
+    })).reverse()
+    : [
+      { name: "No Data", value: 0 },
+    ];
 
   return (
     <div className="min-h-[calc(100vh-64px)] bg-slate-950 text-slate-100">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
-        
+
         <div className="mb-6 flex flex-col gap-3 sm:gap-4">
           <div className="flex items-center justify-between gap-3 flex-wrap">
             <Link
@@ -48,9 +63,9 @@ export default function DashboardOverview() {
           </h1>
         </div>
 
-        
+
         <div className="grid gap-4 sm:gap-6 grid-cols-1 md:grid-cols-3">
-          
+
           <div className="rounded-2xl p-[1px] bg-gradient-to-r from-slate-800 via-slate-900 to-slate-800 shadow-lg">
             <div className="rounded-2xl bg-gradient-to-br from-slate-950 to-slate-900 p-4 sm:p-6">
               <p className="text-xs sm:text-sm text-slate-400">
@@ -74,7 +89,7 @@ export default function DashboardOverview() {
             </div>
           </div>
 
-          
+
           <div className="rounded-2xl p-[1px] bg-gradient-to-r from-slate-800 via-slate-900 to-slate-800 shadow-lg">
             <div className="rounded-2xl bg-gradient-to-br from-slate-950 to-slate-900 p-4 sm:p-6">
               <p className="text-xs sm:text-sm text-slate-400">Plan</p>
@@ -85,7 +100,7 @@ export default function DashboardOverview() {
           </div>
         </div>
 
-        
+
         <div className="mt-8 rounded-2xl p-[1px] bg-gradient-to-r from-indigo-500/60 via-fuchsia-500/40 to-sky-500/60 shadow-lg">
           <div className="rounded-2xl bg-slate-950 p-4 sm:p-6">
             <p className="mb-4 text-sm sm:text-base font-semibold text-slate-100">

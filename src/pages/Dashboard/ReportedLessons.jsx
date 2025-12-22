@@ -82,61 +82,128 @@ export default function ReportedLessons() {
     }
   };
 
-  return (
-    <div>
-      <h1 className="text-2xl font-semibold mb-4">Reported Lessons</h1>
+  const isEmpty = !reported || reported.length === 0;
 
-      {loading ? (
-        <div className="flex items-center justify-center h-64">
-          <div className="animate-spin h-10 w-10 rounded-full border-4 border-slate-200 border-t-primary" />
-        </div>
-      ) : (
-        <div className="overflow-x-auto rounded-xl bg-white shadow-sm">
-          <table className="min-w-full text-sm">
-            <thead className="bg-slate-50">
-              <tr>
-                <th className="px-4 py-2 text-left">Lesson Title</th>
-                <th className="px-4 py-2 text-left">Report Count</th>
-                <th className="px-4 py-2 text-left">Last Reported</th>
-                <th className="px-4 py-2 text-left">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {reported.map((item) => (
-                <tr key={item.lessonId} className="border-t">
-                  <td className="px-4 py-2 max-w-xs truncate">
-                    {item.lessonTitle || "Untitled"}
-                  </td>
-                  <td className="px-4 py-2">{item.reportCount}</td>
-                  <td className="px-4 py-2 text-xs text-slate-500">
-                    {item.lastReportedAt
-                      ? new Date(item.lastReportedAt).toLocaleString()
-                      : "-"}
-                  </td>
-                  <td className="px-4 py-2">
-                    <button
-                      onClick={() => openReportDetails(item.lessonId)}
-                      className="text-xs text-primary"
-                    >
-                      View Details
-                    </button>
-                  </td>
-                </tr>
-              ))}
-              {reported.length === 0 && !loading && (
-                <tr>
-                  <td
-                    colSpan="4"
-                    className="px-4 py-4 text-center text-slate-500"
+  return (
+    <div className="min-h-[70vh] bg-slate-50 px-4 py-6">
+      <div className="mx-auto max-w-6xl">
+        <h1 className="mb-4 text-2xl font-extrabold tracking-tight text-slate-900">
+          Reported Lessons
+        </h1>
+
+        {loading ? (
+          <div className="flex h-64 items-center justify-center">
+            <div className="flex flex-col items-center gap-3">
+              <div className="h-8 w-8 animate-spin rounded-full border-4 border-slate-300 border-t-primary" />
+              <p className="text-sm text-slate-500">
+                Loading reported lessons...
+              </p>
+            </div>
+          </div>
+        ) : (
+          <>
+            {/* Desktop table */}
+            <div className="hidden md:block">
+              <div className="overflow-x-auto rounded-xl border border-slate-100 bg-white shadow-sm">
+                <table className="min-w-full text-sm">
+                  <thead className="bg-slate-50">
+                    <tr>
+                      <th className="px-4 py-2 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                        Lesson Title
+                      </th>
+                      <th className="px-4 py-2 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                        Report Count
+                      </th>
+                      <th className="px-4 py-2 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                        Last Reported
+                      </th>
+                      <th className="px-4 py-2 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                        Actions
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {reported.map((item) => (
+                      <tr key={item.lessonId} className="border-t border-slate-100">
+                        <td className="max-w-xs truncate px-4 py-2">
+                          {item.lessonTitle || "Untitled"}
+                        </td>
+                        <td className="px-4 py-2">{item.reportCount}</td>
+                        <td className="px-4 py-2 text-xs text-slate-500">
+                          {item.lastReportedAt
+                            ? new Date(item.lastReportedAt).toLocaleString()
+                            : "-"}
+                        </td>
+                        <td className="px-4 py-2">
+                          <button
+                            onClick={() => openReportDetails(item.lessonId)}
+                            className="text-xs text-primary hover:underline"
+                          >
+                            View Details
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                    {isEmpty && (
+                      <tr>
+                        <td
+                          colSpan="4"
+                          className="px-4 py-4 text-center text-slate-500"
+                        >
+                          No reported lessons. 🎉
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Mobile cards */}
+            <div className="mt-4 space-y-3 md:hidden">
+              {isEmpty ? (
+                <div className="rounded-2xl border border-dashed border-slate-300 bg-white px-4 py-6 text-center text-sm text-slate-500">
+                  No reported lessons. 🎉
+                </div>
+              ) : (
+                reported.map((item) => (
+                  <div
+                    key={item.lessonId}
+                    className="rounded-2xl border border-slate-100 bg-white p-4 shadow-sm"
                   >
-                    No reported lessons. 🎉
-                  </td>
-                </tr>
+                    <h2 className="text-sm font-semibold text-slate-900">
+                      {item.lessonTitle || "Untitled"}
+                    </h2>
+                    <p className="mt-1 text-xs text-slate-500">
+                      Reports:{" "}
+                      <span className="font-medium text-slate-700">
+                        {item.reportCount}
+                      </span>
+                    </p>
+                    <p className="mt-1 text-xs text-slate-500">
+                      Last reported:{" "}
+                      <span className="font-medium text-slate-700">
+                        {item.lastReportedAt
+                          ? new Date(item.lastReportedAt).toLocaleString()
+                          : "-"}
+                      </span>
+                    </p>
+
+                    <div className="mt-3 flex flex-wrap gap-3 text-xs">
+                      <button
+                        onClick={() => openReportDetails(item.lessonId)}
+                        className="font-medium text-primary"
+                      >
+                        View Details
+                      </button>
+                    </div>
+                  </div>
+                ))
               )}
-            </tbody>
-          </table>
-        </div>
-      )}
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 }

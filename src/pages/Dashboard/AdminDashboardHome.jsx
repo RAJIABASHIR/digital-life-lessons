@@ -1,34 +1,19 @@
-import { useEffect, useState } from "react";
-import axiosInstance from "../../utils/axiosInstance";
-import toast from "react-hot-toast";
+import { useQuery } from "@tanstack/react-query";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 export default function AdminDashboardHome() {
-  const [stats, setStats] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const axiosInstance = useAxiosSecure();
 
-  useEffect(() => {
-    const loadStats = async () => {
-      try {
-        setLoading(true);
-        const res = await axiosInstance.get("/admin/stats");
-        const payload = res.data;
-        const normalized =
-          payload?.data && typeof payload.data === "object" ? payload.data : payload;
+  const { data: stats, isLoading } = useQuery({
+    queryKey: ["admin-stats"],
+    queryFn: async () => {
+      const res = await axiosInstance.get("/admin/stats");
+    
+      return res.data?.data || res.data;
+    },
+  });
 
-        setStats(normalized);
-      } catch (err) {
-        console.error(err);
-        toast.error(err.response?.data?.message || "Failed to load admin stats");
-        setStats(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadStats();
-  }, []);
-
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="min-h-[calc(100vh-64px)] bg-slate-50">
         <div className="max-w-6xl mx-auto px-6 py-10">
@@ -67,10 +52,10 @@ export default function AdminDashboardHome() {
         </h1>
 
         <div className="grid md:grid-cols-4 gap-6">
-          <StatCard label="Total Users" value={stats.totalUsers} />
-          <StatCard label="Total Public Lessons" value={stats.totalPublicLessons} />
-          <StatCard label="Reported Lessons" value={stats.totalReportedLessons} />
-          <StatCard label="Today’s New Lessons" value={stats.todaysNewLessons} />
+          <StatCard label="Total Users" value={stats.totalUsers ?? 6} />
+          <StatCard label="Total Public Lessons" value={stats.totalPublicLessons ?? 6} />
+          <StatCard label="Reported Lessons" value={stats.totalReportedLessons } />
+          <StatCard label="Today’s New Lessons" value={stats.todaysNewLessons } />
         </div>
       </div>
     </div>

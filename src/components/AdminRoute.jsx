@@ -1,13 +1,21 @@
-import { Navigate } from "react-router-dom";
-import useAuth from "../context/useAuth";
-import LoadingSpinner from "./LoadingSpinner";
+import React from 'react';
+import useAuth from '../context/useAuth';
+import LoadingSpinner from './LoadingSpinner';
+import useRole from '../hooks/useRole';
+import Forbidden from './Forbidden/Forbidden';
 
 const AdminRoute = ({ children }) => {
-  const { loading, appUser } = useAuth();
-  if (loading) return <LoadingSpinner />;
-  if (!appUser || appUser.role !== "admin") {
-    return <Navigate to="/dashboard" replace />;
+  const { loading } = useAuth();
+  const { role, roleLoading } = useRole();
+
+  if (loading || roleLoading) {
+    return <LoadingSpinner />;
   }
+
+  if (role !== 'admin') {
+    return <Forbidden />;
+  }
+
   return children;
 };
 
